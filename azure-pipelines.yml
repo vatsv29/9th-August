@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:'VKC_AGENT_POOL'
+
+steps:
+
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: 'C:\DevOps_Insider\new_pipeline\9th-August'
+    backendServiceArm: 'my_first_pipeline'
+    backendAzureRmStorageAccountName: 'nitsstg1'
+    backendAzureRmContainerName: 'vaibhavcontainer'
+    backendAzureRmKey: 'b1.tf'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: 'C:\DevOps_Insider\new_pipeline\9th-August'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: 'C:\DevOps_Insider\new_pipeline\9th-August'
+    environmentServiceNameAzureRM: 'my_first_pipeline'
